@@ -1,6 +1,17 @@
 var tilesGroup1, tilesGroup2, tilesGroup3;
 
+var leg;
+
+var shoes;
+
+var bg;
+
 var score = 0;
+
+function preload() {
+  shoes = loadImage ("shoes.png");
+  bg = loadImage ("bg.jpg");
+}
 
 
 function setup() {
@@ -10,32 +21,52 @@ function setup() {
   tilesGroup3 = new Group ();
   textSize (30);
   textFont ("Times New Roman");
-  fill ("black");
+  fill ("white");
+  leg = createSprite (400, 400, 40, 70);
+  leg.addImage (shoes);
 }
 
 function draw() {
-  background(255,255,255); 
+  background(bg); 
   text ("Score : " + score, 650, 100);
+  leg.x = mouseX;
+  leg.y = mouseY;
   spawnTiles(); 
   spawnMoreTiles();
   spawnMore2Tiles();
 
-  /*
-  if (mousePressedOver (tilesGroup1)){
+  
+  if (leg.isTouching (tilesGroup1)){
     tilesGroup1.destroyEach();
     score += 2;
   }
 
-  if (mousePressedOver (tilesGroup2)){
+  if (leg.isTouching (tilesGroup2)){
     tilesGroup2.destroyEach();
     score += 3;
   }
 
-  if (mousePressedOver (tilesGroup3)){
+  if (leg.isTouching (tilesGroup3)){
     tilesGroup3.destroyEach();
     score += 1;
   }
-  */
+
+  edges = createEdgeSprites();
+
+  if (tilesGroup1.collide(edges[3])){
+    score-=4;
+    tilesGroup1.destroyEach();
+  }
+
+  if (tilesGroup2.collide(edges[3])){
+    score-=1;
+    tilesGroup2.destroyEach();
+  }
+
+  if (tilesGroup3.collide(edges[3])){
+    score-=2;
+    tilesGroup3.destroyEach();
+  }
 
   drawSprites();
 }
