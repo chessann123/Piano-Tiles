@@ -6,11 +6,16 @@ var shoes;
 
 var bg;
 
+var music, ding, plop;
+
 var score = 0;
 
 function preload() {
   shoes = loadImage ("shoes.png");
   bg = loadImage ("bg.jpg");
+  music = loadSound ("music.mp3");
+  ding = loadSound ("ding.mp3");
+  plop = loadSound ("Plop.mp3");
 }
 
 
@@ -34,21 +39,25 @@ function draw() {
   spawnTiles(); 
   spawnMoreTiles();
   spawnMore2Tiles();
+  //music.play();
 
   
   if (leg.isTouching (tilesGroup1)){
     tilesGroup1.destroyEach();
     score += 2;
+    ding.play();
   }
 
   if (leg.isTouching (tilesGroup2)){
     tilesGroup2.destroyEach();
     score += 3;
+    ding.play();
   }
 
   if (leg.isTouching (tilesGroup3)){
     tilesGroup3.destroyEach();
     score += 1;
+    ding.play();
   }
 
   edges = createEdgeSprites();
@@ -56,16 +65,19 @@ function draw() {
   if (tilesGroup1.collide(edges[3])){
     score-=4;
     tilesGroup1.destroyEach();
+    plop.play();
   }
 
   if (tilesGroup2.collide(edges[3])){
     score-=1;
     tilesGroup2.destroyEach();
+    plop.play();
   }
 
   if (tilesGroup3.collide(edges[3])){
     score-=2;
     tilesGroup3.destroyEach();
+    plop.play();
   }
 
   drawSprites();
