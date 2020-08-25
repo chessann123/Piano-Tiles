@@ -8,6 +8,10 @@ var bg;
 
 var music, ding, plop;
 
+var gameState = "start";
+
+var restart, restartImg;
+
 var score = 0;
 
 function preload() {
@@ -16,11 +20,12 @@ function preload() {
   music = loadSound ("music.mp3");
   ding = loadSound ("ding.mp3");
   plop = loadSound ("Plop.mp3");
+  restartImg = loadImage ("restart.png");
 }
 
 
 function setup() {
-  createCanvas(800,800);
+  createCanvas(displayWidth-40,displayHeight-50);
   tilesGroup1 = new Group ();
   tilesGroup2 = new Group ();
   tilesGroup3 = new Group ();
@@ -29,19 +34,24 @@ function setup() {
   fill ("white");
   leg = createSprite (400, 400, 40, 70);
   leg.addImage (shoes);
+  restart = createSprite (80, 80, 100, 100);
+  restart.visible = false;
+  restart.addImage (restartImg);
+  restart.scale = 0.5;
 }
 
 function draw() {
   background(bg); 
-  text ("Score : " + score, 650, 100);
-  leg.x = mouseX;
-  leg.y = mouseY;
-  spawnTiles(); 
-  spawnMoreTiles();
-  spawnMore2Tiles();
+  text ("Score : " + score, displayWidth-250, 100);
+  if (gameState == "start"){
+    leg.x = mouseX;
+    leg.y = mouseY;
+    spawnTiles(); 
+    spawnMoreTiles();
+    spawnMore2Tiles();
+
   //music.play();
 
-  
   if (leg.isTouching (tilesGroup1)){
     tilesGroup1.destroyEach();
     score += 2;
@@ -80,12 +90,32 @@ function draw() {
     plop.play();
   }
 
+  if (score>10){
+    gameState = "end";
+    restart.visible = true;
+  }
+
+} else if (gameState == "end"){
+  tilesGroup1.destroyEach();
+  tilesGroup2.destroyEach();
+  tilesGroup3.destroyEach();
+  textSize (100);
+  fill ("white");
+  text ("GAME OVER", displayWidth/2 - 300, displayHeight/2);
+}
+
+if (mousePressedOver (restart)){
+  gameState = "start";
+  score = 0;
+  restart.visible = false;
+}
+
   drawSprites();
 }
 
 function spawnTiles(){
   if (frameCount%100==0){
-    var tile = createSprite (random (50,750), 0, 50, 80);
+    var tile = createSprite (random (50,displayWidth-100), 0, 50, 80);
     tile.shapeColor = color (random (0, 255), random (0,255), random (0,255));
     tile.velocityY = 10;
     tile.lifetime = 100;
@@ -95,7 +125,7 @@ function spawnTiles(){
 
 function spawnMoreTiles(){
   if (frameCount%120==0){
-    var tile = createSprite (random (50,750), 0, 50, 80);
+    var tile = createSprite (random (50,displayWidth-100), 0, 50, 80);
     tile.shapeColor = color (random (0, 255), random (0,255), random (0,255));
     tile.velocityY = 14;
     tile.lifetime = 100;
@@ -105,7 +135,7 @@ function spawnMoreTiles(){
 
 function spawnMore2Tiles(){
   if (frameCount%130==0){
-    var tile = createSprite (random (50,750), 0, 50, 80);
+    var tile = createSprite (random (50,displayWidth-100), 0, 50, 80);
     tile.shapeColor = color (random (0, 255), random (0,255), random (0,255));
     tile.velocityY = 8;
     tile.lifetime = 100;
